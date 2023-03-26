@@ -88,7 +88,48 @@ class Vampire {
 
     return thisVamp; // once they are the same, return either Vamp
   }
+
+  vampireWithName(name) {
+    if (this.name === name) {
+      return this;
+    }
+
+    for (const offspring of this.offspring) {
+      const vampire = offspring.vampireWithName(name); // search until if statement is satisfied
+      if (vampire !== null) {
+        return vampire // we found the vampire
+      }
+    }
+
+    return null; // otherwise nothing
+  }
+
+  // Returns the total number of vampires that exist
+  get totalDescendents() {
+    let count = 0;
+
+    for (const offspring of this.offspring) {
+      count += 1 + offspring.totalDescendents; // pattern is + 1 to then recurse
+    }
+
+    return count;
+  }
+
+  // Returns an array of all the vampires that were converted after 1980
+  get allMillennialVampires() {
+    let vampires = [];
+
+    if (this.yearConverted > 1980) {
+      vampires.push(this);
+    }
+
+    for (const offspring of this.offspring) {
+      vampires = vampires.concat(offspring.allMillennialVampires); //.concat so we are not pushing an array into another array
+    }
+
+    return vampires;
+  }
 }
 
-module.exports = Vampire;
 
+module.exports = Vampire;
